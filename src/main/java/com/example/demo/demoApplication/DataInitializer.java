@@ -14,25 +14,30 @@ public class DataInitializer {
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepo, ScenarioRepository scenarioRepo) {
         return args -> {
-            // 1. יצירת מנהל ראשון (אם לא קיים)
-            if (userRepo.findByEmail("admin@company.com").isEmpty()) {
+            // 1. יצירת מנהל ראשון לפי תעודת זהות (במקום אימייל)
+            boolean adminExists = userRepo.findAll().stream()
+                    .anyMatch(u -> "ADMIN".equals(u.getRole()));
+
+            if (!adminExists) {
                 User admin = new User();
                 admin.setEmail("admin@company.com");
-                admin.setPassword("123456");
                 admin.setFullName("המנהלת הגדולה");
                 admin.setRole("ADMIN");
+                admin.setAgentCode("ADMIN_001");
                 userRepo.save(admin);
                 System.out.println("✅ Admin created!");
             }
 
-            // 2. יצירת נציג ראשון (כדי שיהיה לכן לינק לבדיקה)
+            // 2. יצירת נציג ראשון לבדיקה
             if (userRepo.findAll().size() <= 1) {
                 User agent = new User();
+                agent.setIdNumber("987654321");
                 agent.setEmail("agent1@company.com");
                 agent.setFullName("ישראל ישראלי");
                 agent.setRole("AGENT");
-                User savedAgent = userRepo.save(agent);
-                System.out.println("✅ Agent created! Link: " + savedAgent.getUniqueLink());
+                agent.setAgentCode("AG001");
+                userRepo.save(agent);
+                System.out.println("✅ Agent created!");
             }
 
             // 3. יצירת תרחיש ראשון

@@ -12,7 +12,12 @@ public class SimulationResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String traineeId; // נשמור כאן את ה-agentCode (למשל "AG100")
+    private String traineeId;
+    @ManyToOne
+    @JoinColumn(name = "scenario_id")
+
+    private Scenario scenario;
+
     private Integer finalScore;
 
     @Column(columnDefinition = "TEXT")

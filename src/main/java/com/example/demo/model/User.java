@@ -2,7 +2,6 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -16,26 +15,19 @@ public class User {
     private String email;
 
     @Column(unique = true, nullable = false)
-    private String agentCode; // המזהה הפנימי לעבודה (למשל: "AG100")
+    private String agentCode;
 
     @Column(unique = true)
-    private String idNumber; // שדה חדש לת"ז
+    private String idNumber;
 
-    private String password;
     private String fullName;
-    private String role; // "ADMIN" או "AGENT"
+    private String role;
+
+    private String googleId;
+    private String pictureUrl;
 
     @Column(name = "user_rank")
     private int rank = 1;
 
-    @Column(unique = true)
-    private String uniqueLink;
-
-    @PrePersist
-    public void generateLink() {
-        if ("AGENT".equals(this.role)) {
-            this.uniqueLink = UUID.randomUUID().toString();
-        }
-    }
 }
 
