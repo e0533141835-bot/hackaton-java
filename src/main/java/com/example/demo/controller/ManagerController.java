@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/manager")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class ManagerController {
 
     @Autowired
@@ -48,19 +48,21 @@ public class ManagerController {
         return savedAgent;
     }
 
-    // 2. הוספת תרחיש (למשל: לקוח עצבני)
     @PostMapping("/add-scenario")
     public Scenario addScenario(@RequestBody Scenario scenario) {
         return scenarioRepository.save(scenario);
     }
 
-    // 3. הצגת כל התרחישים (כדי שהנציג יבחר אחד)
     @GetMapping("/scenarios")
     public List<Scenario> getAllScenarios() {
         return scenarioRepository.findAll();
     }
 
-    // 4. דוח למנהלת: כל תוצאות הסימולציות
+    @DeleteMapping("/delete-scenario/{id}")
+    public void deleteScenario(@PathVariable Long id) {
+        scenarioRepository.deleteById(id);
+    }
+
     @GetMapping("/all-results")
     public List<SimulationResult> getAllResults() {
         return resultRepository.findAll();
@@ -78,7 +80,6 @@ public class ManagerController {
         return assignmentRepository.save(assignment);
     }
 
-    // שיוך תרחיש לכל הנציגים
     @PostMapping("/assign-to-all")
     public void assignToAll(@RequestParam Long scenarioId, @RequestParam String difficulty) {
         Scenario scenario = scenarioRepository.findById(scenarioId).orElseThrow();
@@ -94,7 +95,6 @@ public class ManagerController {
         }
     }
 
-    // חיפוש נציג לפי שם
     @GetMapping("/search-agent")
     public List<User> searchAgent(@RequestParam String name) {
         return userRepository.findByFullNameContainingIgnoreCaseAndRole(name, "AGENT");

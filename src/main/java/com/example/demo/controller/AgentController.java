@@ -27,6 +27,12 @@ public class AgentController {
         return assignmentRepository.findByAgentAndStatus(agent, "PENDING");
     }
 
+    @GetMapping("/assignment/{id}")
+    public ScenarioAssignment getAssignment(@PathVariable Long id) {
+        return assignmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("משימה לא נמצאה"));
+    }
+
     // 2. שליפת היסטוריית סימולציות אישית
     @GetMapping("/{agentCode}/history")
     public List<SimulationResult> getMyHistory(@PathVariable String agentCode) {

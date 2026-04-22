@@ -3,6 +3,8 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+
+
 @Entity
 @Table(name = "scenarios")
 @Data
@@ -18,4 +20,7 @@ public class Scenario {
 
     private String difficulty;
     private String category;
+
+    @Column(columnDefinition = "TEXT")
+    private String rawData;
 }
